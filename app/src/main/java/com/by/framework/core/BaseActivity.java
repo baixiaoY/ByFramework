@@ -7,6 +7,7 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -74,14 +75,19 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
             toolbar_title.setText("");
             if (mode == MODE_BACK){
                 toolbar.setNavigationIcon(R.mipmap.ic_toolbar_back);
+                toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onNavigationBtnClicked();
+                    }
+                });
             }
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onNavigationBtnClicked();
-                }
-            });
-
+            if (mode==MODE_HOME){
+                setSupportActionBar(toolbar);
+                getSupportActionBar().setHomeButtonEnabled(true);
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                getSupportActionBar().setDisplayShowTitleEnabled(false);
+            }
             setUpTitle(titleResId);
             setUpMenu(menuId);
         }
@@ -115,6 +121,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
 
     }
+
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {

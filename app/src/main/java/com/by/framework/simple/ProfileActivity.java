@@ -25,7 +25,7 @@ public class ProfileActivity extends BaseActivity {
 
     @Override
     protected void setUpData() {
-        setContentView(R.layout.activity_profile,R.string.profile_title);
+        setContentView(R.layout.activity_profile,R.string.profile_title,R.menu.main_menu,MODE_BACK);
         mProfileLabel = (TextView) findViewById(R.id.mProfileLabel);
         mProfileLabel.setText(CustomApplication.mTestNullPointers.toString());
     }
