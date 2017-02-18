@@ -20,7 +20,7 @@ import com.by.framework.simple.HomeActivity;
  * Created by asus-pc on 2017/2/16.
  */
 
-public class BaseActivity extends AppCompatActivity implements View.OnClickListener, Toolbar.OnMenuItemClickListener {
+public abstract class BaseActivity extends AppCompatActivity implements View.OnClickListener, Toolbar.OnMenuItemClickListener {
 
     protected Toolbar toolbar;
     protected TextView toolbar_title;
@@ -39,14 +39,18 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
             case ConstantValues.STATUS_LOGOUT:
             case ConstantValues.STATUS_OFFLINE:
             case ConstantValues.STATUS_ONLINE:
+                setUpContentView();
+                setUpView();
                 setUpData();
                 break;
         }
     }
 
-    protected void setUpData() {
+    protected abstract void setUpContentView();
 
-    }
+    protected abstract void setUpView();
+
+    protected abstract void setUpData();
 
     protected void protectApp() {
         Intent intent = new Intent(this,HomeActivity.class);

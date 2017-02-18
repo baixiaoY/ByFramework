@@ -36,8 +36,12 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     @Override
-    protected void setUpData() {
+    protected void setUpContentView() {
         setContentView(R.layout.activity_home,R.string.home_title,R.menu.main_menu,MODE_HOME);
+    }
+
+    @Override
+    protected void setUpView() {
         mHomeProfileBtn = (Button) findViewById(R.id.mHomeProfileBtn);
         drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         navigationView = (NavigationView)findViewById(R.id.navigation);
@@ -56,6 +60,11 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         mDrawerToggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
         mHomeProfileBtn.setOnClickListener(this);
+    }
+
+    @Override
+    protected void setUpData() {
+
         CustomApplication.mTestNullPointers = new ArrayList<>();
         CustomApplication.mTestNullPointers.add("profile");
     }
@@ -85,6 +94,11 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_settings:
+                startActivity(new Intent(this, SimpleListActivity.class));
+                break;
+        }
         return super.onMenuItemClick(item);
     }
 

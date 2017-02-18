@@ -19,9 +19,11 @@
                   android:screenOrientation="portrait" />
         <activity android:name=".simple.HomeActivity"
                   android:screenOrientation="portrait"
-            android:launchMode="singleTask"/>
+                  android:launchMode="singleTask"/>
         <activity android:name=".simple.ProfileActivity"
                   android:screenOrientation="portrait" />
+        <activity android:name=".simple.SimpleListActivity"
+                   android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

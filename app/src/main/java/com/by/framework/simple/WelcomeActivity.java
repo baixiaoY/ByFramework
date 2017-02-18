@@ -21,8 +21,18 @@ public class WelcomeActivity extends BaseActivity {
     }
 
     @Override
-    protected void setUpData() {
+    protected void setUpContentView() {
         setContentView(R.layout.activity_welcome,-1,-1,MODE_NONE);
+    }
+
+    @Override
+    protected void setUpView() {
+
+    }
+
+    @Override
+    protected void setUpData() {
+
         handler.sendEmptyMessageDelayed(0,1000);
     }
 

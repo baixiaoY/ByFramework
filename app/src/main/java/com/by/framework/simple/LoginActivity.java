@@ -26,10 +26,20 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     }
 
     @Override
-    protected void setUpData() {
+    protected void setUpContentView() {
         setContentView(R.layout.activity_login,R.string.login_title);
+    }
+
+    @Override
+    protected void setUpView() {
         mLoginSubmitBtn = (Button) findViewById(R.id.mLoginSubmitBtn);
         mLoginSubmitBtn.setOnClickListener(this);
+    }
+
+    @Override
+    protected void setUpData() {
+
+
     }
 
     @Override

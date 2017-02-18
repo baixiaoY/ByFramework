@@ -24,9 +24,19 @@ public class ProfileActivity extends BaseActivity {
     }
 
     @Override
-    protected void setUpData() {
+    protected void setUpContentView() {
         setContentView(R.layout.activity_profile,R.string.profile_title,R.menu.main_menu,MODE_BACK);
+
+    }
+
+    @Override
+    protected void setUpView() {
         mProfileLabel = (TextView) findViewById(R.id.mProfileLabel);
+    }
+
+    @Override
+    protected void setUpData() {
+
         mProfileLabel.setText(CustomApplication.mTestNullPointers.toString());
     }
 }
