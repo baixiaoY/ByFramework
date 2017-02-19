@@ -11,6 +11,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.by.framework.R;
+import com.by.framework.widget.pull.DividerItemDecoration;
+import com.by.framework.widget.pull.ILayoutManager;
+import com.by.framework.widget.pull.MyLinearLayoutManager;
+import com.by.framework.widget.pull.PullToRefreshRecycler;
 
 import java.util.ArrayList;
 
@@ -18,75 +22,104 @@ import java.util.ArrayList;
  * Created by asus-pc on 2017/2/18.
  */
 
-public abstract class BaseListActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener {
+public abstract class BaseListActivity<T> extends BaseActivity implements PullToRefreshRecycler.OnRecyclerRefreshListener {
 
-
-    protected SwipeRefreshLayout swipeRefreshLayout;
-    protected RecyclerView recyclerView;
-    protected SampleListAdapter adapter;
+    protected BaseListAdapter adapter;
+    protected ArrayList<T> mDataList;
+    protected PullToRefreshRecycler recycler;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void setUpContentView() {
+        setContentView(R.layout.activity_base_list,-1);
     }
-
 
     @Override
     protected void setUpView() {
-        swipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.swipeRefreshLayout);
-        swipeRefreshLayout.setOnRefreshListener(this);
-        recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
+        recycler = (PullToRefreshRecycler)findViewById(R.id.pullToRefreshRecycler);
     }
 
     @Override
     protected void setUpData() {
-        recyclerView.setLayoutManager(getLayoutManager());
-        adapter = new SampleListAdapter();
-        recyclerView.setAdapter(adapter);
+        recycler.setLayoutManager(getLayoutManager());
+        recycler.setOnRefreshListener(this);
+        recycler.addItemDecoration(getItemDecoration());
+        adapter = new BaseListAdapter();
+        recycler.setAdapter(adapter);
 
     }
 
-    protected RecyclerView.LayoutManager getLayoutManager() {
-        return new LinearLayoutManager(getApplicationContext());
+    protected RecyclerView.ItemDecoration getItemDecoration() {
+        return new DividerItemDecoration(getApplicationContext(),R.drawable.list_divider);
     }
 
-    protected void setRefreshing(){
-        swipeRefreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                swipeRefreshLayout.setRefreshing(true);
-               onRefresh();
-            }
-        });
+    protected ILayoutManager getLayoutManager() {
+        return new MyLinearLayoutManager(getApplicationContext());
     }
 
+    public class BaseListAdapter extends RecyclerView.Adapter<BaseViewHolder>{
 
 
-    public class SampleListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
-
+        private static final int VIEW_TYPE_LOAD_MORE_FOOTER = 100;
+        private boolean isShowLoadMoreFoot;
 
         @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
+        public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            if (viewType==VIEW_TYPE_LOAD_MORE_FOOTER){
+                return getLoadMoreFooter(parent);
+            }
             return getViewHolder(parent,viewType);
         }
 
+        protected BaseViewHolder getLoadMoreFooter(ViewGroup parent) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.widget_pull_to_refresh_footer,parent,false);
+            return new LoadMoreFooterViewHolder(view);
+        }
+
         @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            onBind(holder,position);
+        public void onBindViewHolder(BaseViewHolder holder, int position) {
+            //onBind(holder,position);
+            holder.onBind(position);
         }
 
         @Override
         public int getItemCount() {
-            return getDataCount();
+            return mDataList!=null ? mDataList.size()+(isShowLoadMoreFoot?1:0):0;
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            if (isShowLoadMoreFoot && position == getItemCount()-1){
+                return VIEW_TYPE_LOAD_MORE_FOOTER;
+            }
+            return super.getItemViewType(position);
+        }
+
+        public void showLoadMoreFoot(boolean isShow) {
+            this.isShowLoadMoreFoot = isShow;
+            if(isShow){
+                notifyItemInserted(getItemCount());
+            }else{
+                notifyItemRemoved(getItemCount());
+            }
+        }
+
+        private class LoadMoreFooterViewHolder extends BaseViewHolder {
+            public LoadMoreFooterViewHolder(View view) {
+                super(view);
+            }
+
+            @Override
+            protected void onBind(int position) {
+
+            }
         }
     }
 
-    protected abstract int getDataCount();
+//    protected abstract int getDataCount();
 
-    protected abstract void onBind(RecyclerView.ViewHolder holder, int position);
+    //protected abstract void onBind(BaseViewHolder holder, int position);
 
-    protected abstract RecyclerView.ViewHolder getViewHolder(ViewGroup parent, int viewType);
+    protected abstract BaseViewHolder getViewHolder(ViewGroup parent, int viewType);
 
 
 }
