@@ -11,7 +11,9 @@ import android.widget.TextView;
 import com.by.framework.R;
 import com.by.framework.core.BaseListActivity;
 import com.by.framework.core.BaseViewHolder;
+import com.by.framework.widget.pull.FooterSpanSizeLookup;
 import com.by.framework.widget.pull.ILayoutManager;
+import com.by.framework.widget.pull.MyGridLayoutManager;
 import com.by.framework.widget.pull.MyLinearLayoutManager;
 import com.by.framework.widget.pull.MyStaggeredGridLayoutManager;
 import com.by.framework.widget.pull.PullToRefreshRecycler;
@@ -47,6 +49,7 @@ public class SimpleListActivity extends BaseListActivity<String>{
     @Override
     protected void setUpData() {
         super.setUpData();
+
         recycler.setRefreshing();
     }
 
@@ -70,7 +73,12 @@ public class SimpleListActivity extends BaseListActivity<String>{
 
     @Override
     protected ILayoutManager getLayoutManager() {
-        return new MyLinearLayoutManager(getApplicationContext());
+//        MyGridLayoutManager myGridLayoutManager = new MyGridLayoutManager(getApplicationContext(),3);
+//        FooterSpanSizeLookup lookup = new FooterSpanSizeLookup(adapter,3);
+//        myGridLayoutManager.setSpanSizeLookup(lookup);
+//        return myGridLayoutManager;
+        MyGridLayoutManager layoutManager = new MyGridLayoutManager(getApplicationContext(), 3);
+        return layoutManager;
         //return new MyStaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
     }
 
@@ -86,7 +94,7 @@ public class SimpleListActivity extends BaseListActivity<String>{
                     mDataList.clear();
                 }
                 int size = mDataList.size();
-                for (int i = size; i < size+20; i++) {
+                for (int i = size; i < size+30; i++) {
                     mDataList.add("sample list item " + i);
                 }
                 adapter.notifyDataSetChanged();
@@ -131,8 +139,14 @@ public class SimpleListActivity extends BaseListActivity<String>{
         }
 
         @Override
-        protected void onBind(int position) {
+        public void onBindViewHolder(int position) {
             mSampleListItemLabel.setText(mDataList.get(position));
         }
+
+        @Override
+        public void onItemClick(View view, int position) {
+
+        }
+
     }
 }

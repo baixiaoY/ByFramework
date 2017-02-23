@@ -5,6 +5,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.AttributeSet;
 
+import com.by.framework.core.BaseListAdapter;
+
 /**
  * Created by asus-pc on 2017/2/19.
  */
@@ -20,16 +22,22 @@ public class MyStaggeredGridLayoutManager extends StaggeredGridLayoutManager imp
     }
 
 
-
     @Override
     public RecyclerView.LayoutManager getLayoutManager() {
         return this;
     }
 
     @Override
-    public int findLastVisibleItemPosition() {
+    public int findLastVisiblePosition() {
         int[] positions = null;
         positions = findLastVisibleItemPositions(positions);
         return positions[0];
     }
+
+    @Override
+    public void setUpAdapter(BaseListAdapter adapter) {
+
+    }
+
+
 }

@@ -3,6 +3,7 @@
     package="com.by.framework">
 
     <application
+        android:name=".core.CustomApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -24,6 +25,15 @@
                   android:screenOrientation="portrait" />
         <activity android:name=".simple.SimpleListActivity"
                    android:screenOrientation="portrait"/>
+        <activity android:name=".simple.sampleTabActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".simple.Home1Activity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"/>
+        <activity android:name=".simple.SampleListActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".simple.SampleSectionListActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

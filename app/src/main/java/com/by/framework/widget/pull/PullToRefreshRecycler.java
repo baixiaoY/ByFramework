@@ -6,10 +6,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.widget.FrameLayout;
 
 import com.by.framework.R;
 import com.by.framework.core.BaseListActivity;
+import com.by.framework.core.BaseListAdapter;
+import com.by.framework.utils.L;
 
 /**
  * Created by asus-pc on 2017/2/19.
@@ -27,7 +30,7 @@ public class PullToRefreshRecycler extends FrameLayout implements SwipeRefreshLa
     private boolean isLoadMoreEnabled = false;
     private boolean isPullToRefreshEnabled = true;
     private ILayoutManager mLayoutManager;
-    private BaseListActivity.BaseListAdapter adapter;
+    private BaseListAdapter adapter;
 
     public PullToRefreshRecycler(Context context) {
         super(context);
@@ -59,9 +62,12 @@ public class PullToRefreshRecycler extends FrameLayout implements SwipeRefreshLa
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
+                L.i("dy:"+dy);
                 if (mCurrentState == ACTION_IDLE && isLoadMoreEnabled && checkIfLoadMore()){
+                    L.i("isLoadMoreEnabled:"+isLoadMoreEnabled);
+                    L.i("checkIfLoadMore:"+checkIfLoadMore());
                     mCurrentState = ACTION_LOAD_MORE_REFRESH;
-                    adapter.showLoadMoreFoot(true);
+                    adapter.onLoadMoreStateChanged(true);
                     mSwipeRefreshLayout.setEnabled(false);
                     listener.onRefresh(ACTION_LOAD_MORE_REFRESH);
 
@@ -70,10 +76,14 @@ public class PullToRefreshRecycler extends FrameLayout implements SwipeRefreshLa
         });
     }
 
+    
+
     private boolean checkIfLoadMore() {
-        int position = mLayoutManager.findLastVisibleItemPosition();
+        int position = mLayoutManager.findLastVisiblePosition();
+        L.i("position:"+position);
         int totalCount = mLayoutManager.getLayoutManager().getItemCount();
-        return totalCount - position < 3;
+        L.i("totalCount:"+totalCount);
+        return totalCount - position < 5;
     }
 
     public void enableLoadMore(boolean enable){
@@ -82,6 +92,7 @@ public class PullToRefreshRecycler extends FrameLayout implements SwipeRefreshLa
 
     public void enablePullToRefresh(boolean enable){
         isPullToRefreshEnabled = enable;
+        mSwipeRefreshLayout.setEnabled(enable);
     }
 
     public void setLayoutManager(ILayoutManager manager){
@@ -95,9 +106,10 @@ public class PullToRefreshRecycler extends FrameLayout implements SwipeRefreshLa
         }
     }
 
-    public void setAdapter(BaseListActivity.BaseListAdapter adapter){
+    public void setAdapter(BaseListAdapter adapter){
         this.adapter = adapter;
         mRecyclerView.setAdapter(adapter);
+        mLayoutManager.setUpAdapter(adapter);
     }
 
     public void setRefreshing(){
@@ -128,7 +140,7 @@ public class PullToRefreshRecycler extends FrameLayout implements SwipeRefreshLa
                 mSwipeRefreshLayout.setRefreshing(false);
                 break;
             case ACTION_LOAD_MORE_REFRESH://加载更多
-                adapter.showLoadMoreFoot(false);
+                adapter.onLoadMoreStateChanged(false);
                 if (isPullToRefreshEnabled){
                     mSwipeRefreshLayout.setEnabled(true);
                 }
@@ -140,4 +152,5 @@ public class PullToRefreshRecycler extends FrameLayout implements SwipeRefreshLa
     public interface OnRecyclerRefreshListener{
         void onRefresh(int action);
     }
+
 }

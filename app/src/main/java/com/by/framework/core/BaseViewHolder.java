@@ -10,7 +10,15 @@ import android.view.View;
 public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
     public BaseViewHolder(View itemView) {
         super(itemView);
+        itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onItemClick(v, getAdapterPosition());
+            }
+        });
     }
 
-    protected abstract void onBind(int position);
+    public abstract void onBindViewHolder(int position);
+
+    public abstract void onItemClick(View view, int position);
 }
